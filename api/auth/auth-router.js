@@ -1,7 +1,10 @@
 const router = require('express').Router();
-
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+const { check, checkCreateUsername, checkLoginUsername } = require('./middleware')
+const {login, create} = require('./auth-model')
+router.post('/register', check, checkCreateUsername, async (req, res) => {
+  const {username, password} = req.body
+  const user = await create({username, password})
+  res.status(201).json(user)
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -29,8 +32,14 @@ router.post('/register', (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', check, checkLoginUsername, async (req, res) => {
+  const {username, password} = req.body
+  const user = await login({username, password})
+  if (user.message === 'invalid credentials') {
+    res.status(401).json(user)
+  } else {
+    res.status(200).json(user)
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
