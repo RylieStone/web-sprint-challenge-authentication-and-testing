@@ -25,7 +25,7 @@ async function checkLoginUsername(req, res, next) {
     if (dbr.length === 1) {
         next()
     } else {
-        res.status(401).json({message: 'username does not exist'})
+        res.status(401).json('username does not exist')
     }
 }
 module.exports = {
