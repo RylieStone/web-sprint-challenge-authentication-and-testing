@@ -1,5 +1,19 @@
+const jw = require('jsonwebtoken')
+const {TOKEN} = require('../keys')
 module.exports = (req, res, next) => {
-  next();
+  const token = req.headers.authorization
+  if (token === undefined) {
+    res.status(401).json({message: 'token required'})
+  } else {
+
+    jw.verify(token, TOKEN, (err, decoded) => {
+      if (err) {
+        res.status(401).json({message: 'token invalid'})
+      } else {
+        next()
+      }
+      })
+  }
   /*
     IMPLEMENT
 
